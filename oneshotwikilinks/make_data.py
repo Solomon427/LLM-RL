@@ -13,6 +13,8 @@ import numpy as np
 import copy
 import time
 
+model = SentenceTransformer('all-mpnet-base-v2')
+
 def categoryCount():
     from collections import defaultdict
     import gzip
@@ -20,7 +22,7 @@ def categoryCount():
         
     counts = {}
 
-    with gzip.open('entityfreq.gz', 'rt') as f:
+    with gzip.open('entityfreq.gz', 'rt', encoding='utf-8') as f:
         for line in f:
             try:
                 freq, entity = line.strip().split()
@@ -35,7 +37,6 @@ def getCategories(threshold):
     import json
     import re
     
-    model = SentenceTransformer('all-mpnet-base-v2')
         
     for entity, freq in categoryCount().items():
         if freq >= threshold:
@@ -51,10 +52,9 @@ def makeData(threshold, categories):
     from collections import defaultdict
     import json
     
-    model = SentenceTransformer('all-mpnet-base-v2')
     catcount = defaultdict(int)
     
-    with open('shuffled_dedup_entities.tsv') as f:
+    with open('shuffled_dedup_entities.tsv', 'r', encoding='utf-8') as f:
         batchline, batchencode, batchentity = [], [], []
         for line in f:
             try:
